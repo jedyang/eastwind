@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eastwind.backend.mapper.ShopMapper">
+    <resultMap id="BaseResultMap" type="com.eastwind.backend.model.Shop">
+        <id column="shop_id" jdbcType="INTEGER" property="shopId"/>
+        <result column="shop_name" jdbcType="VARCHAR" property="shopName"/>
+        <result column="shop_addr" jdbcType="VARCHAR" property="shopAddr"/>
+        <result column="shop_desc" jdbcType="VARCHAR" property="shopDesc"/>
+        <result column="invitePicUrl" jdbcType="VARCHAR" property="invitePicUrl"/>
+        <result column="picUrls" jdbcType="VARCHAR" property="picUrls"/>
+        <result column="mainPic" jdbcType="VARCHAR" property="mainPic"/>
+        <result column="shopLatitude" jdbcType="VARCHAR" property="shopLatitude"/>
+        <result column="shopLongitude" jdbcType="VARCHAR" property="shopLongitude"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        shop_id, shop_name, shop_addr, shop_desc, invitePicUrl, picUrls, mainPic,shopLatitude,shopLongitude
+    </sql>
+    <sql id="Base_Column_List_A">
+        a.shop_id, a.shop_name, a.shop_addr, a.shop_desc, a.invitePicUrl, a.picUrls, a.mainPic, a.shopLatitude, a.shopLongitude
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from shop
+        where shop_id = #{shopId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM shop
+        WHERE shop_id = #{shopId,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.eastwind.backend.model.Shop">
+        INSERT INTO shop (shop_id, shop_name, shop_addr, shop_desc, invitePicUrl, picUrls, mainPic,
+        shopLatitude, shopLongitude)
+        VALUES
+            (#{shopId,jdbcType=INTEGER}, #{shopName,jdbcType=VARCHAR}, #{shopAddr,jdbcType=VARCHAR},
+              #{shopDesc,jdbcType=VARCHAR}, #{invitePicUrl,jdbcType=VARCHAR}, #{picUrls,jdbcType=VARCHAR},
+               #{mainPic,jdbcType=VARCHAR}, #{shopLatitude,jdbcType=VARCHAR}, #{shopLongitude,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.eastwind.backend.model.Shop" useGeneratedKeys="true"
+            keyProperty="shopId" keyColumn="shop_id">
+        insert into shop
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">
+                shop_name,
+            </if>
+            <if test="shopAddr != null">
+                shop_addr,
+            </if>
+            <if test="shopDesc != null">
+                shop_desc,
+            </if>
+            <if test="invitePicUrl != null">
+                invitePicUrl,
+            </if>
+            <if test="picUrls != null">
+                picUrls,
+            </if>
+            <if test="mainPic != null">
+                mainPic,
+            </if>
+            <if test="shopLatitude != null">
+                shopLatitude,
+            </if>
+            <if test="shopLongitude != null">
+                shopLongitude,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">
+                #{shopName,jdbcType=VARCHAR},
+            </if>
+            <if test="shopAddr != null">
+                #{shopAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="shopDesc != null">
+                #{shopDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="invitePicUrl != null">
+                #{invitePicUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="picUrls != null">
+                #{picUrls,jdbcType=VARCHAR},
+            </if>
+            <if test="mainPic != null">
+                #{mainPic,jdbcType=VARCHAR},
+            </if>
+            <if test="shopLatitude != null">
+                #{shopLatitude,jdbcType=VARCHAR},
+            </if>
+            <if test="shopLongitude != null">
+                #{shopLongitude,jdbcType=VARCHAR},
+            </if>
+
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.eastwind.backend.model.Shop">
+        update shop
+        <set>
+            <if test="shopName != null">
+                shop_name = #{shopName,jdbcType=VARCHAR},
+            </if>
+            <if test="shopAddr != null">
+                shop_addr = #{shopAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="shopDesc != null">
+                shop_desc = #{shopDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="invitePicUrl != null">
+                invitePicUrl = #{invitePicUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="picUrls != null">
+                picUrls = #{picUrls,jdbcType=VARCHAR},
+            </if>
+            <if test="mainPic != null">
+                mainPic = #{mainPic,jdbcType=VARCHAR},
+            </if>
+            <if test="shopLatitude != null">
+                #{shopLatitude,jdbcType=VARCHAR},
+            </if>
+            <if test="shopLongitude != null">
+                #{shopLongitude,jdbcType=VARCHAR},
+            </if>
+
+        </set>
+        where shop_id = #{shopId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.eastwind.backend.model.Shop">
+        UPDATE shop
+        SET shop_name    = #{shopName,jdbcType=VARCHAR},
+            shop_addr    = #{shopAddr,jdbcType=VARCHAR},
+            shop_desc    = #{shopDesc,jdbcType=VARCHAR},
+            invitePicUrl    = #{invitePicUrl,jdbcType=VARCHAR},
+            picUrls = #{picUrls,jdbcType=VARCHAR},
+            mainPic = #{mainPic,jdbcType=VARCHAR},
+            shopLatitude = #{shopLatitude,jdbcType=VARCHAR},
+            shopLongitude = #{shopLongitude,jdbcType=VARCHAR},
+        WHERE shop_id = #{shopId,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectAllShopsOfUser" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List_A"/>
+        from shop a
+        INNER JOIN shop_user_map b
+        on a.shop_id = b.shopId
+        and b.userId = #{userId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectNearShop" parameterType="java.lang.Double" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>,
+        (POWER(MOD(ABS(shopLongitude - #{longitude}),360),2) + POWER(ABS(shopLatitude - #{latitude}),2)) AS distance
+        FROM shop
+        WHERE shop.shopLatitude IS NOT NULL AND shop.shopLongitude IS NOT NULL
+        ORDER BY distance LIMIT 20
+    </select>
+</mapper>

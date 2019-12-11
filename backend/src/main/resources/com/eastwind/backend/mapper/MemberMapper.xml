@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eastwind.backend.mapper.MemberMapper">
+    <resultMap id="BaseResultMap" type="com.eastwind.backend.model.Member">
+        <id column="member_id" property="memberId" jdbcType="INTEGER"/>
+        <result column="open_id" property="openId" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="passwd" property="passwd" jdbcType="VARCHAR"/>
+        <result column="money" property="money" jdbcType="DOUBLE"/>
+        <result column="points" property="points" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        member_id, open_id, name, phone, passwd, money, points
+    </sql>
+    <sql id="Base_Column_List_m">
+        m.member_id, m.open_id, m.name, m.phone, m.passwd, m.money, m.points
+    </sql>
+    <sql id="query_Where_Clause">
+        <where>
+            <if test="openId != null">
+                AND open_id = #{openId,jdbcType=VARCHAR}
+            </if>
+            <if test="phone != null">
+                AND phone = #{phone,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from member
+        where member_id = #{memberId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectBySelective" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from member
+        <include refid="query_Where_Clause"/>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM member
+        WHERE member_id = #{memberId,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.eastwind.backend.model.Member">
+        INSERT INTO member (member_id, open_id, name,
+                            phone, passwd, money,
+                            points)
+        VALUES (#{memberId,jdbcType=INTEGER}, #{openId,jdbcType=VARCHAR},
+                #{name,jdbcType=VARCHAR},
+                #{phone,jdbcType=VARCHAR}, #{passwd,jdbcType=VARCHAR}, #{money,jdbcType=DOUBLE},
+                #{points,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.eastwind.backend.model.Member">
+        insert into member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberId != null">
+                member_id,
+            </if>
+
+            <if test="openId != null">
+                open_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="passwd != null">
+                passwd,
+            </if>
+            <if test="money != null">
+                money,
+            </if>
+            <if test="points != null">
+                points,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberId != null">
+                #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="openId != null">
+                #{openId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="passwd != null">
+                #{passwd,jdbcType=VARCHAR},
+            </if>
+            <if test="money != null">
+                #{money,jdbcType=DOUBLE},
+            </if>
+            <if test="points != null">
+                #{points,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.eastwind.backend.model.Member">
+        update member
+        <set>
+            <if test="openId != null">
+                openId = #{open_id,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="passwd != null">
+                passwd = #{passwd,jdbcType=VARCHAR},
+            </if>
+            <if test="money != null">
+                money = #{money,jdbcType=DOUBLE},
+            </if>
+            <if test="points != null">
+                points = #{points,jdbcType=INTEGER},
+            </if>
+        </set>
+        where member_id = #{memberId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.eastwind.backend.model.Member">
+        UPDATE member
+        SET open_id = #{openId,jdbcType=VARCHAR},
+            name    = #{name,jdbcType=VARCHAR},
+            phone   = #{phone,jdbcType=VARCHAR},
+            passwd  = #{passwd,jdbcType=VARCHAR},
+            money   = #{money,jdbcType=DOUBLE},
+            points  = #{points,jdbcType=INTEGER}
+        WHERE member_id = #{memberId,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectAllMembersOfShop" parameterType="java.lang.Integer"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List_m"/>
+        from member m
+        INNER JOIN shop_member_map s
+        on s.member_id = m.member_id
+        and s.shop_id = #{shopId,jdbcType=INTEGER};
+    </select>
+
+    <select id="queryAllMembersByShopAndKeyWord"
+            resultMap="BaseResultMap">
+        <bind name="pattern" value="'%' + keyword + '%'" />
+        SELECT <include refid="Base_Column_List_m"/>
+        from member m
+        WHERE m.member_id in (SELECT smm.member_id FROM shop_member_map smm where smm.shop_id = #{shopId})
+        AND (m.phone LIKE #{pattern}
+        OR m.name LIKE #{pattern})
+
+    </select>
+</mapper>

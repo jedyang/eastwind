@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eastwind.backend.mapper.ShopMemberMapMapper">
+    <resultMap id="BaseResultMap" type="com.eastwind.backend.model.ShopMemberMap">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="shop_id" jdbcType="INTEGER" property="shopId"/>
+        <result column="member_id" jdbcType="INTEGER" property="memberId"/>
+        <result column="money" jdbcType="DOUBLE" property="money"/>
+        <result column="point" jdbcType="INTEGER" property="point"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="shop_name" jdbcType="VARCHAR" property="shopName"/>
+        <result column="shop_addr" jdbcType="VARCHAR" property="shopAddr"/>
+        <result column="shop_desc" jdbcType="VARCHAR" property="shopDesc"/>
+        <result column="invitePicUrl" jdbcType="VARCHAR" property="invitePicUrl"/>
+        <result column="picUrls" jdbcType="VARCHAR" property="picUrls"/>
+        <result column="mainPic" jdbcType="VARCHAR" property="mainPic"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, shop_id, member_id, money, point, type, create_time
+    </sql>
+    <sql id="Extend_Column_List">
+        smm.id, smm.shop_id, smm.member_id, smm.money, smm.point, smm.type, smm.create_time, s.shop_name, s.shop_addr, s.shop_desc, s.invitePicUrl, s.picUrls, s.mainPic
+    </sql>
+    <sql id="query_Where_Clause">
+        <where>
+            <if test="shopId != null">
+                AND shop_id = #{shopId,jdbcType=VARCHAR}
+            </if>
+            <if test="memberId != null">
+                AND member_id = #{memberId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Extend_Column_List"/>
+        from shop_member_map smm INNER JOIN shop s ON smm.shop_id = s.shop_id
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM shop_member_map
+        WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.eastwind.backend.model.ShopMemberMap">
+        INSERT INTO shop_member_map (id, shop_id, member_id,
+                                     money, point, type,
+                                     create_time)
+        VALUES (#{id,jdbcType=INTEGER}, #{shopId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER},
+                #{money,jdbcType=DOUBLE}, #{point,jdbcType=INTEGER}, #{type,jdbcType=INTEGER},
+                #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.eastwind.backend.model.ShopMemberMap">
+        insert into shop_member_map
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="memberId != null">
+                member_id,
+            </if>
+            <if test="money != null">
+                money,
+            </if>
+            <if test="point != null">
+                point,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="shopId != null">
+                #{shopId,jdbcType=INTEGER},
+            </if>
+            <if test="memberId != null">
+                #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="money != null">
+                #{money,jdbcType=DOUBLE},
+            </if>
+            <if test="point != null">
+                #{point,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.eastwind.backend.model.ShopMemberMap">
+        update shop_member_map
+        <set>
+            <if test="shopId != null">
+                shop_id = #{shopId,jdbcType=INTEGER},
+            </if>
+            <if test="memberId != null">
+                member_id = #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="money != null">
+                money = #{money,jdbcType=DOUBLE},
+            </if>
+            <if test="point != null">
+                point = #{point,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.eastwind.backend.model.ShopMemberMap">
+        UPDATE shop_member_map
+        SET shop_id     = #{shopId,jdbcType=INTEGER},
+            member_id   = #{memberId,jdbcType=INTEGER},
+            money       = #{money,jdbcType=DOUBLE},
+            point       = #{point,jdbcType=INTEGER},
+            type        = #{type,jdbcType=INTEGER},
+            create_time = #{createTime,jdbcType=TIMESTAMP}
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <select id="selectBySelective" parameterType="com.eastwind.backend.model.ShopMemberMap" resultMap="BaseResultMap">
+        select
+        <include refid="Extend_Column_List"/>
+        from shop_member_map smm INNER JOIN shop s ON smm.shop_id = s.shop_id
+        <include refid="query_Where_Clause"/>
+    </select>
+
+</mapper>
