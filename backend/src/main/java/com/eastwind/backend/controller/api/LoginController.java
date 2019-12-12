@@ -15,14 +15,11 @@ import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -38,7 +35,16 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginController {
 
     @Autowired
+    private MessageSource messageSource;
+
+    @Autowired
     private SysUserService sysUserService;
+
+    @GetMapping("/test")
+    public Result testInfo() {
+        System.out.println(messageSource.getMessage("user.register.err.username.repeat", null, LocaleContextHolder.getLocale()));
+        return ResultFactory.buildFailResult(messageSource.getMessage("user.register.err.username.repeat", null, LocaleContextHolder.getLocale()));
+    }
 
     /**
      * 用户注册
